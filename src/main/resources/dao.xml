@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+		http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-4.0.xsd
+		http://www.springframework.org/schema/mvc
+		http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		">
+
+    <!-- 开启注解 -->
+    <mvc:annotation-driven/>
+    <!--扫描 controller-->
+    <context:annotation-config />
+    <context:component-scan base-package="com.mavenwebapp">
+        <context:exclude-filter type="regex" expression="com\.mavenwebapp\.controller.*"/>
+    </context:component-scan>
+
+    <bean id="baseDao" class="com.mavenwebapp.dao.BaseDaoImpl" scope="prototype">
+        <!--<property name="dataSource"  ref="dataSource" />-->
+    </bean>
+
+    <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://127.0.0.1:3306/mavenwebapp?useUnicode=true&amp;characterEncoding=utf8" />
+        <property name="username" value="root" />
+        <property name="password" value="root" />
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="0"></property>
+        <!-- 连接池最大数量 -->
+        <property name="maxActive" value="2"></property>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="1"></property>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="60000"></property>
+    </bean>
+
+    <bean id="sessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.mavenwebapp.mapper" />
+    </bean>
+
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>
