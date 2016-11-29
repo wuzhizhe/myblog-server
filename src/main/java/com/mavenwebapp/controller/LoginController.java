@@ -45,6 +45,7 @@ public class LoginController {
             if (rUser != null) {
                 userInfo.put("username", rUser.getUsername());
                 userInfo.put("sex", rUser.getSex());
+                userInfo.put("id", rUser.getId());
                 userInfo.put("telphone", rUser.getTelphone());
                 userInfo.put("nickname", rUser.getNickname());
                 map.put("data", userInfo);

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org/DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.mavenwebapp.mapper.ImageMapper">
+    <resultMap id="imageResultMap" type="com.mavenwebapp.entity.Image">
+    </resultMap>
+
+    <select id="getImageById" parameterType="String" resultMap="imageResultMap">
+        SELECT * FROM image where imageId = #{imageId}
+    </select>
+
+    <insert id="insertImages">
+        INSERT into image(imageId, name, address, type) VALUES
+        <foreach collection="list" item="item" index="index">
+            (#{item.imageId}, #{item.name}, #{item.address}, #{item.type})
+        </foreach>
+    </insert>
+
+</mapper>

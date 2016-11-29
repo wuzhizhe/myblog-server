@@ -14,13 +14,8 @@ import java.util.List;
 
 @Component
 public interface ImageMapper {
-    @Insert("INSERT into image(" +
-            "imageId, name, address, base64Str, type" +
-            ") " +
-            "values (" +
-            "#{imageId}, #{name}, #{address}, #{base64Str}, #{type})")
-    public void insertImage(Image image);
 
-    @Select("SELECT * FROM image where imageId = #{imageId}")
-    public Image getImage(@Param("imageId") String imageId);
+    public void insertImages(List<Image> images);
+
+    public Image getImageById(String imageId);
 }

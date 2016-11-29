@@ -4,7 +4,6 @@ package com.mavenwebapp.entity;
  * Created by zhangzemu on 2016/11/25.
  */
 public class Image {
-
     private String imageId;
     private String name;
     private String address;

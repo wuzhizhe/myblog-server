@@ -3,6 +3,8 @@ package com.mavenwebapp.controller;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mavenwebapp.entity.Image;
+import com.mavenwebapp.service.ImageService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,10 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.bind.DatatypeConverter;
 import java.awt.image.BufferedImage;
 import java.io.*;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.*;
 
 /**
  * Created by zhangzemu on 2016/11/18.
@@ -34,6 +36,9 @@ import java.util.UUID;
 )
 public class ImageUploadController {
 
+    @Autowired
+    ImageService imageService;
+
     public static String webRoot = System.getProperty("pwd");
     BASE64Decoder decoder = new BASE64Decoder();
 
@@ -45,14 +50,18 @@ public class ImageUploadController {
             ObjectMapper mapper = new ObjectMapper();
             Image[] images = mapper.readValue(request.getParameter("images"), Image[].class);
             saveImageFiles(images);
+            List<Image> imageList = Arrays.asList(images);
+            saveImage(imageList);
             map.put("data", images);
         } catch (JsonMappingException e) {
+            map.put("success", false);
             e.printStackTrace();
         } catch (Exception e) {
+            map.put("success", false);
             e.printStackTrace();
+        } finally {
+            return map;
         }
-        map.put("success", true);
-        return map;
     }
 
     public void saveImageFiles(Image[] images) {
@@ -67,7 +76,11 @@ public class ImageUploadController {
                 image = ImageIO.read(new ByteArrayInputStream(imageByte));
                 bis.close();
                 String imageType = tempImg.getType().split("/")[1];
-                String filename = webRoot + "\\images" + "\\" + uuid +"." + imageType;
+                Path path = Paths.get(webRoot + "images");
+                if (Files.notExists(path)) {
+                    Files.createDirectories(path);
+                }
+                String filename = webRoot + "images" + "\\" + uuid +"." + imageType;
                 tempImg.setAddress("images/"+ uuid +"." + imageType);
                 tempImg.setImageId(uuid);
                 File outputfile = new File(filename);
@@ -76,7 +89,16 @@ public class ImageUploadController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
 
+    public void saveImage(List<Image> images) {
+        try {
+            imageService.insertImage(images);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("end one upload!");
+        }
     }
 }
 
