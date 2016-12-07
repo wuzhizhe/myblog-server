@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mavenwebapp.entity.Image;
 import com.mavenwebapp.service.ImageService;
+import com.mavenwebapp.utils.RequestUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,11 +49,13 @@ public class ImageUploadController {
         Map<String, Object> map = new HashMap<>();
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Image[] images = mapper.readValue(request.getParameter("images"), Image[].class);
+            Map<String, Object> mapjson = RequestUtil.getRequestBody(request);
+            Image[] images = mapper.readValue(mapjson.get("images").toString(), Image[].class);
             saveImageFiles(images);
             List<Image> imageList = Arrays.asList(images);
             saveImage(imageList);
             map.put("data", images);
+            map.put("success", true);
         } catch (JsonMappingException e) {
             map.put("success", false);
             e.printStackTrace();
