@@ -30,17 +30,21 @@ public class BlogService {
         blogMapper.saveBlogdetail(blogDetail);
     }
 
-    public Map<String, Object> getBlog(String blogId) {
-        return null;
+    public Blog getBlog(String blogId) {
+        return blogMapper.getBlogById(blogId);
     }
 
     public BlogDetail getBlogDetailByBlogId(String blogId) {
-        BlogDetail bd = blogMapper.getBlogDetailById(blogId);
-        return bd;
+        return blogMapper.getBlogDetailById(blogId);
     }
 
     public List<Blog> getBlogs(String userId) {
         List<Blog> blogs = blogMapper.getBlogsByUserId(userId);
         return blogs;
+    }
+
+    public void updateBlogAndDetail(Blog blog, BlogDetail bd) {
+        blogMapper.updateBlog(blog);
+        blogMapper.updateBlogDetail(bd);;
     }
 }

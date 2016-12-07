@@ -4,6 +4,7 @@ import com.mavenwebapp.entity.Blog;
 import com.mavenwebapp.entity.BlogDetail;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface BlogMapper {
     @Insert("insert into blogdetail (blogId, blogText) values (#{blogId}, #{blogText})")
     public void saveBlogdetail(BlogDetail blogDetail);
 
-    @Select("select * from blog where blogid = #{blogId}")
+    @Select("select * from blog where id = #{blogId}")
     public Blog getBlogById(String blogId);
 
     @Select("select * from blog where userid = #{userid}")
@@ -31,5 +32,11 @@ public interface BlogMapper {
 
     @Select("select * from blogdetail where blogid = #{blogid}")
     public BlogDetail getBlogDetailById(String blogId);
+
+    @Update("update blog set blogname = #{blogname}, tags = #{tags} where id = #{id}")
+    public void updateBlog(Blog blog);
+
+    @Update("update blogdetail set blogtext = #{blogText} where blogId = #{blogId}")
+    public void updateBlogDetail(BlogDetail bd);
 
 }

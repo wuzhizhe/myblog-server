@@ -29,6 +29,7 @@ public class BlogController {
     @ResponseBody
     public Map<String, Object> saveBlog(HttpServletRequest request) {
         Map<String, Object> map = new HashMap();
+        Map<String, Object> tempmap = new HashMap();
         Map<String, Object> mapjson = RequestUtil.getRequestBody(request);
         Blog blog = new Blog();
         BlogDetail blogDetail = new BlogDetail();
@@ -37,14 +38,14 @@ public class BlogController {
         blog.setBlogname(mapjson.get("blogname").toString());
         blog.setUserid(Integer.parseInt(mapjson.get("userid").toString()));
         blog.setTags(mapjson.get("tags").toString());
-
         blogDetail.setBlogId(uuid);
         blogDetail.setBlogText(mapjson.get("content").toString());
         try {
             blogService.saveBlog(blog, blogDetail);
             map.put("success", true);
-            map.put("blog", blog);
-            map.put("blogdetail", blogDetail);
+            tempmap.put("blog", blog);
+            tempmap.put("blogdetail", blogDetail);
+            map.put("data", tempmap);
         } catch (Exception e) {
             map.put("success", false);
             e.printStackTrace();
@@ -55,9 +56,21 @@ public class BlogController {
 
     @RequestMapping(value = "/getBlog", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> getBlog() {
-        return null;
+    public Map<String, Object> getBlog(HttpServletRequest request) {
+        Map<String, Object> returnMap = new HashMap<>();
+        Map<String, Object> tempMap = new HashMap<>();
+        Map<String, Object> jsonMap = RequestUtil.getRequestBody(request);
+        String blogId = jsonMap.get("blogid").toString();
+        Blog blog = blogService.getBlog(blogId);
+        BlogDetail bd = blogService.getBlogDetailByBlogId(blogId);
+        tempMap.put("blog", blog);
+        tempMap.put("blogDetail", bd);
+        returnMap.put("success", true);
+        returnMap.put("data", tempMap);
+        return returnMap;
     }
+
+
 
     @RequestMapping(value = "/getBlogList", method = RequestMethod.POST)
     @ResponseBody
@@ -67,6 +80,25 @@ public class BlogController {
         List<Blog> blogs = blogService.getBlogs(mapjson.get("userid").toString());
         map.put("success", true);
         map.put("data", blogs);
+        return map;
+    }
+
+    @RequestMapping(value = "/updateBlog", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> updateBlog(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        Map<String, Object> mapjson = RequestUtil.getRequestBody(request);
+        Blog blog = new Blog();
+        BlogDetail bd = new BlogDetail();
+        String blogId = mapjson.get("blogid").toString();
+        blog.setId(blogId);
+        blog.setTags(mapjson.get("tags").toString());
+        blog.setBlogname(mapjson.get("blogname").toString());
+        bd.setBlogId(blogId);
+        bd.setBlogText(mapjson.get("content").toString());
+        blogService.updateBlogAndDetail(blog, bd);
+        map.put("success", true);
+        map.put("data", blogId);
         return map;
     }
 }
