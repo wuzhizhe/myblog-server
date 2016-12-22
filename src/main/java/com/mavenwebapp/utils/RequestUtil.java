@@ -9,6 +9,7 @@ import java.util.Map;
 
 /**
  * Created by zhangzemu on 2016/12/7.
+ * 为了应对request.getParameter方法失效，用getReader方法进行处理获取前端的POST数据.
  */
 public class RequestUtil {
     public static Map<String, Object> getRequestBody(HttpServletRequest request) {
