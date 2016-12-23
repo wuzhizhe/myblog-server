@@ -24,4 +24,12 @@ public class UserService  {
     public void saveUser(User user){
         userMapper.insertUser(user);
     }
+
+    public void updateUser(User user) {
+        userMapper.updateUser(user);
+    }
+
+    public User getUserByUserId(String id) {
+        return userMapper.getUserByUserId(id);
+    }
 }

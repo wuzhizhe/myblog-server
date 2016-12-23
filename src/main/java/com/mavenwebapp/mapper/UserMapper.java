@@ -4,6 +4,7 @@ import com.mavenwebapp.entity.User;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Component;
 
 /**
@@ -23,5 +24,19 @@ public interface UserMapper {
                 "#{createtime}, #{updatetime})")
         public void insertUser(User user);
 
+        @Select("SELECT * FROM user WHERE id = #{id}")
+        public User getUserByUserId(@Param("id") String id);
+
+        @Update("UPDATE user SET username = #{username}, " +
+                " password = #{password}, " +
+                " nickname = #{nickname}, " +
+                " status = #{status}, " +
+                " name = #{name}, " +
+                " sex = #{sex}, " +
+                " telphone = #{telphone}, " +
+                " createtime = #{createtime}, " +
+                " updatetime = #{updatetime} " +
+                " WHERE id = #{id}")
+        public void updateUser(User user);
 
 }

@@ -48,7 +48,7 @@ public class LoginController {
                 userInfo.put("id", rUser.getId());
                 userInfo.put("telphone", rUser.getTelphone());
                 userInfo.put("nickname", rUser.getNickname());
-                map.put("data", userInfo);
+                map.put("data", rUser);
                 map.put("success", true);
             } else {
                 map.put("success", false);

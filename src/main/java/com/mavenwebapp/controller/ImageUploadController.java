@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mavenwebapp.entity.Image;
 import com.mavenwebapp.service.ImageService;
 import com.mavenwebapp.utils.RequestUtil;
+import com.mavenwebapp.utils.SaveImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +41,6 @@ public class ImageUploadController {
     @Autowired
     ImageService imageService;
 
-    public static String webRoot = System.getProperty("pwd");
     BASE64Decoder decoder = new BASE64Decoder();
 
     @RequestMapping(value="/upload", method = RequestMethod.POST)
@@ -51,7 +51,9 @@ public class ImageUploadController {
             ObjectMapper mapper = new ObjectMapper();
             Map<String, Object> mapjson = RequestUtil.getRequestBody(request);
             Image[] images = mapper.readValue(mapjson.get("images").toString(), Image[].class);
-            saveImageFiles(images);
+            String dir = mapjson.get("dir").toString();
+            String dirName = (dir == null || "".equals(dir) ) ? "images" : dir;
+            SaveImageUtil.saveImageFiles(images, dirName);
             List<Image> imageList = Arrays.asList(images);
             saveImage(imageList);
             map.put("data", images);
@@ -67,32 +69,7 @@ public class ImageUploadController {
         }
     }
 
-    public void saveImageFiles(Image[] images) {
-        try {
-            for (int i = 0; i < images.length; i++) {
-                String uuid = UUID.randomUUID().toString();
-                BufferedImage image = null;
-                Image tempImg = images[i];
-                String base64str = tempImg.getBase64Str().split(",")[1];
-                byte[] imageByte = DatatypeConverter.parseBase64Binary(base64str);
-                ByteArrayInputStream bis = new ByteArrayInputStream(imageByte);
-                image = ImageIO.read(new ByteArrayInputStream(imageByte));
-                bis.close();
-                String imageType = tempImg.getType().split("/")[1];
-                Path path = Paths.get(webRoot + "images");
-                if (Files.notExists(path)) {
-                    Files.createDirectories(path);
-                }
-                String filename = webRoot + "images" + "\\" + uuid +"." + imageType;
-                tempImg.setAddress("images/"+ uuid +"." + imageType);
-                tempImg.setImageId(uuid);
-                File outputfile = new File(filename);
-                ImageIO.write(image, imageType, outputfile);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 
     public void saveImage(List<Image> images) {
         try {

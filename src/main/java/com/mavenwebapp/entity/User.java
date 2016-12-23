@@ -17,6 +17,7 @@ public class User {
     private String telphone;
     private Date createtime;
     private Date updatetime;
+    private String headimage;
 
     public Integer getId() {
         return id;
@@ -96,5 +97,13 @@ public class User {
 
     public void setUpdatetime(Date updatetime) {
         this.updatetime = updatetime;
+    }
+
+    public String getHeadimage() {
+        return headimage;
+    }
+
+    public void setHeadimage(String headimage) {
+        this.headimage = headimage;
     }
 }
