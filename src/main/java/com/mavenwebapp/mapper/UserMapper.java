@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public interface UserMapper {
         @Select("SELECT * FROM user WHERE username = #{username} and password = #{password}")
         public User getUserUsingUsername(@Param("username") String username, @Param("password") String password);
+//        public User getUserUsingUsername(String username, String password);
 
         @Insert("INSERT into user(" +
                 "username, password, nickname, status, name, sex, telphone, createtime, updatetime" +
@@ -26,6 +27,7 @@ public interface UserMapper {
 
         @Select("SELECT * FROM user WHERE id = #{id}")
         public User getUserByUserId(@Param("id") String id);
+//        public User getUserByUserId(String id);
 
         @Update("UPDATE user SET username = #{username}, " +
                 " password = #{password}, " +
@@ -35,7 +37,8 @@ public interface UserMapper {
                 " sex = #{sex}, " +
                 " telphone = #{telphone}, " +
                 " createtime = #{createtime}, " +
-                " updatetime = #{updatetime} " +
+                " updatetime = #{updatetime}, " +
+                " headimage = #{headimage} " +
                 " WHERE id = #{id}")
         public void updateUser(User user);
 
