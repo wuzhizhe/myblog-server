@@ -1,12 +1,9 @@
 package com.mavenwebapp.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mavenwebapp.entity.Image;
 import com.mavenwebapp.entity.User;
 import com.mavenwebapp.service.ImageService;
 import com.mavenwebapp.service.UserService;
-import com.mavenwebapp.utils.RequestUtil;
-import com.mavenwebapp.utils.SaveImageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
