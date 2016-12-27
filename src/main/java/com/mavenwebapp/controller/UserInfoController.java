@@ -52,6 +52,31 @@ public class UserInfoController {
         }
     }
 
+    @RequestMapping(value = "/changepassword", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> changePassword(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            String oldPassword = request.getParameter("oldpassword");
+            String username = request.getParameter("username");
+            String newPassword = request.getParameter("newpassword");
+            User user = userService.getUserUsingUsername(username, oldPassword);
+            if (user == null) {
+                map.put("success", false);
+            } else {
+                user.setPassword(newPassword);
+                userService.updateUser(user);
+                user.setPassword(null);
+                map.put("success", true);
+                map.put("data", user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            return map;
+        }
+    }
+
     public void saveImage(List<Image> images) {
         try {
             imageService.insertImage(images);
