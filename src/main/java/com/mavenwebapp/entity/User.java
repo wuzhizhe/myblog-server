@@ -17,6 +17,7 @@ public class User {
     private String telphone;
     private Date createtime;
     private Date updatetime;
+    private Date lastlogintime;
     private String headimage;
 
     public Integer getId() {
@@ -105,5 +106,13 @@ public class User {
 
     public void setHeadimage(String headimage) {
         this.headimage = headimage;
+    }
+
+    public Date getLastlogintime() {
+        return lastlogintime;
+    }
+
+    public void setLastlogintime(Date lastlogintime) {
+        this.lastlogintime = lastlogintime;
     }
 }
