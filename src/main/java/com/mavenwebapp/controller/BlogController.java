@@ -1,5 +1,7 @@
 package com.mavenwebapp.controller;
 
+import com.mavenwebapp.entity.BlogComment;
+import com.mavenwebapp.entity.Message;
 import com.mavenwebapp.utils.RequestUtil;
 import com.mavenwebapp.entity.Blog;
 import com.mavenwebapp.entity.BlogDetail;
@@ -101,4 +103,80 @@ public class BlogController {
         map.put("data", blogId);
         return map;
     }
+
+    @RequestMapping(value = "/saveComment", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> saveComment(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Map<String, Object> jsonMap = RequestUtil.getRequestBody(request);
+            String blogId = jsonMap.get("blogId").toString();
+            String content = jsonMap.get("content").toString();
+            String cmid = jsonMap.get("cmid").toString();
+            Integer userId = Integer.parseInt(jsonMap.get("userId").toString());
+            BlogComment bc = new BlogComment();
+            bc.setBlogId(blogId);
+            bc.setContent(content);
+            bc.setUserId(userId);
+            bc.setId(cmid);
+            Message msg = new Message();
+            msg.setUserId(userId);
+            msg.setBlogId(blogId);
+            msg.setContent("新的评论回复");
+
+            blogService.saveComment(bc, msg);
+
+            map.put("success", true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("success", false);
+        } finally {
+            return map;
+        }
+    }
+
+    @RequestMapping(value = "/getComments", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> getComments(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<>();
+        try {
+            Map<String, Object> jsonMap = RequestUtil.getRequestBody(request);
+            String blogId = jsonMap.get("blogId").toString();
+            List<BlogComment> bcs = blogService.getCommentsByBlogId(blogId);
+            map.put("success", true);
+            map.put("data", bcs);
+        } catch (Exception e) {
+            e.printStackTrace();
+            map.put("success", false);
+        } finally {
+            return map;
+        }
+    };
+
+    @RequestMapping(value = "/updateComment", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> updateComment(HttpServletRequest request) {
+        Map<String, Object> map = new HashMap<String, Object>();
+        try {
+            Map<String, Object> jsonMap = RequestUtil.getRequestBody(request);
+            String blogId = jsonMap.get("blogId").toString();
+            String content = jsonMap.get("content").toString();
+            String cmid = jsonMap.get("cmid").toString();
+            Integer userId = Integer.parseInt(jsonMap.get("userId").toString());
+            List<BlogComment> bcs = blogService.getCommentsByBlogId(blogId);
+            BlogComment bc = bcs.get(0);
+//            bc.setBlogId(blogId);
+            bc.setContent(content);
+//            bc.setUserId(userId);
+//            bc.setId(cmid);
+            blogService.updateComment(bc, null);
+            map.put("success", true);
+        } catch (Exception e) {
+            map.put("success", false);
+            e.printStackTrace();
+        } finally {
+            return map;
+        }
+    }
+
 }

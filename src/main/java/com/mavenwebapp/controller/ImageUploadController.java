@@ -1,5 +1,6 @@
 package com.mavenwebapp.controller;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mavenwebapp.entity.Image;
@@ -49,9 +50,10 @@ public class ImageUploadController {
         Map<String, Object> map = new HashMap<>();
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Map<String, Object> mapjson = RequestUtil.getRequestBody(request);
-            Image[] images = mapper.readValue(mapjson.get("images").toString(), Image[].class);
-            String dir = mapjson.get("dir").toString();
+//            Map<String, Object> mapjson = mapper.readValue(sb.toString(), new TypeReference<Map<String, Object>>() {});
+//            Map<String, Object> mapjson = RequestUtil.getRequestBody(request);
+            Image[] images = mapper.readValue(request.getParameter("images"), Image[].class);
+            String dir = request.getParameter("dir").toString();
             String dirName = (dir == null || "".equals(dir) ) ? "images" : dir;
             SaveImageUtil.saveImageFiles(images, dirName);
             List<Image> imageList = Arrays.asList(images);

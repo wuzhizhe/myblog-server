@@ -1,7 +1,9 @@
 package com.mavenwebapp.mapper;
 
 import com.mavenwebapp.entity.Blog;
+import com.mavenwebapp.entity.BlogComment;
 import com.mavenwebapp.entity.BlogDetail;
+import com.mavenwebapp.entity.Message;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -38,5 +40,19 @@ public interface BlogMapper {
 
     @Update("update blogdetail set blogtext = #{blogText} where blogId = #{blogId}")
     public void updateBlogDetail(BlogDetail bd);
+
+    @Insert("insert into blogcomment (id, blogId, cmId, content, status, crtTime, userId, email) values (" +
+            " #{id}, #{blogId}, #{cmId}, #{content}, #{status}, #{crtTime}, #{userId}, #{email})")
+    public void saveBlogComment(BlogComment bc);
+
+    @Insert("insert into message ( userId, blogId, content, status) values (" +
+            " #{userId}, #{blogId}, #{content}, #{status})")
+    public void saveMessage(Message msg);
+
+    @Select("select * from blogcomment where blogid = #{blogId}")
+    public List<BlogComment> getCommentsByBlogId(String blogId);
+
+    @Update("update blogcomment set content = #{content} where id = #{id}")
+    public void updateComment(BlogComment bc);
 
 }

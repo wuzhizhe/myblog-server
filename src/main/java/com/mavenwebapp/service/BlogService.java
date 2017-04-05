@@ -1,7 +1,9 @@
 package com.mavenwebapp.service;
 
 import com.mavenwebapp.entity.Blog;
+import com.mavenwebapp.entity.BlogComment;
 import com.mavenwebapp.entity.BlogDetail;
+import com.mavenwebapp.entity.Message;
 import com.mavenwebapp.mapper.BlogMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,6 +47,19 @@ public class BlogService {
 
     public void updateBlogAndDetail(Blog blog, BlogDetail bd) {
         blogMapper.updateBlog(blog);
-        blogMapper.updateBlogDetail(bd);;
+        blogMapper.updateBlogDetail(bd);
+    }
+
+    public void saveComment(BlogComment bc, Message msg) {
+        blogMapper.saveBlogComment(bc);
+        blogMapper.saveMessage(msg);
+    }
+
+    public List<BlogComment> getCommentsByBlogId(String blogId) {
+        return blogMapper.getCommentsByBlogId(blogId);
+    }
+
+    public void updateComment(BlogComment bc, List<Message> msgs) {
+        blogMapper.updateComment(bc);
     }
 }
